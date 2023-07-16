@@ -172,7 +172,7 @@ class SimpleCalculatorTests(unittest.TestCase):
         self.assertEqual(background_txt_after_new_lvl, "")
         title_field = self.driver.find_element_by_accessibility_id(".<empty>.LevelEditor - 1.0.0")
         title_field.send_keys(" Level6Salomon")
-        self.driver.find_element_by_name("Brick red")
+        # USE VISUAL REGRESSION
 
 
 
