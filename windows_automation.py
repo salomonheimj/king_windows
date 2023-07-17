@@ -56,12 +56,9 @@ class WindowsAppTests(unittest.TestCase):
         print("FINISH FILE SELECTION")
 
     def change_window_to_first_handle(self):
-        print(self.driver.window_handles)
         self.driver.switch_to.window(self.driver.window_handles[0])
         time.sleep(1)
         self.driver.switch_to.window(self.driver.current_window_handle)
-        print(self.driver.window_handles)
-        print(self.driver.current_window_handle)
 
     def reset_test_3(self):
         i = 0
@@ -101,6 +98,7 @@ class WindowsAppTests(unittest.TestCase):
     def open_lvl_folder_from_assets(self):
         self.change_window_to_first_handle()
         self.driver.implicitly_wait(30)
+        self.change_window_to_first_handle()
         self.driver.find_element_by_name("assets").click()
         self.driver.find_element_by_name("Abrir").click()
         self.change_window_to_first_handle()
