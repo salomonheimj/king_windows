@@ -2,7 +2,7 @@
 
 This repository contains Python test scripts for automating Windows application testing using the Appium library with Python bindings. The tests are designed to interact with a Windows application called "LevelEditor" version 1.0.0.
 
-## Prerequisites
+## Pre-requisites
 
 Before running the tests, ensure you have the following software installed:
 
@@ -59,3 +59,9 @@ The test suite contains the following test cases:
 2. **test_02_open_level**: This test case verifies the ability to open and modify an existing level. It opens "Level3" from the "Levels" folder, modifies the title and background, and saves the changes.
 
 3. **test_03_open_all_tests**: This test case iteratively opens different levels from the "Levels" folder and verifies their existence.
+
+## Conflicts
+
+The block and grid interactions showed no selectors. Attempts of accessibility inspection using spy++, inspector.exe and UIAVerify for Windows showed no way to interact with them. Visual recognition attempts were made, but for lack of compatibility with the versions used in this suite, it couldn't be implemented in time.
+
+Appium inspector wasn't able to connect to the app due to W3C conflicts (which were fixed by hand by deleting the appium-prefix from the connection library). Problems similar to this have been listed on https://github.com/microsoft/WinAppDriver/issues/988 and https://github.com/webdriverio/webdriverio/issues/7007
