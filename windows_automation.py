@@ -15,17 +15,22 @@ from selenium.webdriver.common.keys import Keys
 def bring_window_to_top(window_handle):
     """Brings the specified window to the top."""
     ctypes.windll.user32.BringWindowToTop(window_handle)
-class SimpleCalculatorTests(unittest.TestCase):
+
+
+class WindowsAppTests(unittest.TestCase):
 
     @classmethod
-
     def setUpClass(self):
-        #set up appium
+        # set up appium
         desired_caps = {}
         desired_caps["app"] = "C:\\Users\\salom\\Desktop\\salomon\\levelEditor.exe"
         self.driver = webdriver.Remote(
             command_executor='http://127.0.0.1:4723',
-            desired_capabilities= desired_caps)
+            desired_capabilities=desired_caps)
+
+    @classmethod
+    def tearDownClass(self):
+        self.driver.quit()
 
     def open_lvl_3(self):
         self.change_window_to_first_handle()
@@ -33,12 +38,9 @@ class SimpleCalculatorTests(unittest.TestCase):
         self.change_window_to_first_handle()
         wait = WebDriverWait(self.driver, 30)
         time.sleep(1)
-        print(self.driver.window_handles)
         self.driver.w3c = False
         self.driver.switch_to.window(self.driver.current_window_handle)
         self.driver.switch_to.window(self.driver.window_handles[0])
-        print(self.driver.window_handles)
-        print(self.driver.current_window_handle)
         self.driver.implicitly_wait(30)
         assets_elem = wait.until(EC.element_to_be_clickable((By.NAME, "assets")))
         assets_elem.click()
@@ -57,7 +59,6 @@ class SimpleCalculatorTests(unittest.TestCase):
         print(self.driver.window_handles)
         self.driver.switch_to.window(self.driver.window_handles[0])
         time.sleep(1)
-        print("ON MAIN")
         self.driver.switch_to.window(self.driver.current_window_handle)
         print(self.driver.window_handles)
         print(self.driver.current_window_handle)
@@ -69,15 +70,12 @@ class SimpleCalculatorTests(unittest.TestCase):
             i += 1
         background_field = self.driver.find_element_by_accessibility_id("Background-01.png.<empty>.LevelEditor - 1.0.0")
         background_field.click()
-        print("AFTER SELECTION DROPDOWN")
         self.change_window_to_first_handle()
         self.driver.find_element_by_name("Background-03.png").click()
-        print("AFTER CLICK")
         self.change_window_to_first_handle()
         background_lvl_change = self.driver.find_element_by_name("Background-03.png").text
         self.assertEqual(background_lvl_change, "Background-03.png")
         self.driver.find_element_by_accessibility_id("Save.<empty>.LevelEditor - 1.0.0").click()
-
 
     def open_lvl_folder(self):
         wait = WebDriverWait(self.driver, 30)
@@ -85,12 +83,9 @@ class SimpleCalculatorTests(unittest.TestCase):
         time.sleep(2)
         self.driver.implicitly_wait(30)
         self.driver.find_element_by_accessibility_id("Open Level.<empty>.LevelEditor - 1.0.0").click()
-        print(self.driver.window_handles)
         self.driver.w3c = False
         self.driver.switch_to.window(self.driver.current_window_handle)
         self.driver.switch_to.window(self.driver.window_handles[0])
-        print(self.driver.window_handles)
-        print(self.driver.current_window_handle)
         self.change_window_to_first_handle()
         self.driver.implicitly_wait(30)
         element_assets = wait.until(EC.element_to_be_clickable((By.NAME, 'assets')))
@@ -115,7 +110,6 @@ class SimpleCalculatorTests(unittest.TestCase):
         time.sleep(2)
 
     def test_01_click_new_level(self):
-        print(self.driver.window_handles)
         background_txt_before_new_lvl = self.driver.find_element_by_accessibility_id(
             "Background-01.png.<empty>.LevelEditor - 1.0.0").text
         self.assertEqual(background_txt_before_new_lvl, "Background-01.png")
@@ -126,7 +120,10 @@ class SimpleCalculatorTests(unittest.TestCase):
             ".<empty>.LevelEditor - 1.0.0").text
         self.assertEqual(background_txt_after_new_lvl, "")
         title_field = self.driver.find_element_by_accessibility_id(".<empty>.LevelEditor - 1.0.0")
-        title_field.send_keys(" Level6Salomon")
+        title_field.send_keys(" Level7Salomon")
+        self.driver.find_element_by_xpath("//*[@LocalizedControlType='cuadro combinado']").click()
+        self.change_window_to_first_handle()
+        self.driver.find_element_by_name("Background-01.png").click()
         self.change_window_to_first_handle()
         self.driver.find_element_by_accessibility_id("Save.<empty>.LevelEditor - 1.0.0").click()
         self.open_lvl_folder_from_assets()
@@ -138,7 +135,6 @@ class SimpleCalculatorTests(unittest.TestCase):
             self.driver.find_element_by_name("Sí").click()
         except:
             pass
-
 
     def test_02_open_level(self):
         self.driver.implicitly_wait(30)
@@ -168,7 +164,7 @@ class SimpleCalculatorTests(unittest.TestCase):
         time.sleep(3)
         i = 2
         elem_exists = True
-        while elem_exists and i < 10:
+        while elem_exists and i < 9:
             self.open_lvl_folder()
             self.change_window_to_first_handle()
             elements = self.driver.find_elements_by_xpath("//*[@Name='Vista Elementos']/*")
@@ -187,17 +183,20 @@ class SimpleCalculatorTests(unittest.TestCase):
                 "lvl4": "Background-04.png",
                 "lvl5": "Background-05.png",
                 "lvl6": "Background-01.png",
-                "lvl7": "Background-05.png"
+                "lvl7": "Background-01.png"
             }
             search_str = "lvl" + str(i - 1)
             i += 1
             print(i)
             try:
                 lvl_loaded = self.driver.find_element_by_name(lvl_dict[search_str])
-                self.assertIsNotNone(lvl_loaded)
             except NoSuchElementException:
+                lvl_loaded = None
                 elem_exists = False
 
+            self.assertIsNotNone(lvl_loaded)
+
+
 if __name__ == '__main__':
-    suite = unittest.TestLoader().loadTestsFromTestCase(SimpleCalculatorTests)
+    suite = unittest.TestLoader().loadTestsFromTestCase(WindowsAppTests)
     unittest.TextTestRunner(verbosity=2).run(suite)
