@@ -2,6 +2,7 @@ import time
 import unittest
 from appium import webdriver
 import ctypes
+from appium.webdriver.common.touch_action import TouchAction
 
 from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver.common.keys import Keys
@@ -87,6 +88,7 @@ class SimpleCalculatorTests(unittest.TestCase):
         self.driver.find_element_by_name("Levels").click()
         self.driver.find_element_by_name("Abrir").click()
         time.sleep(2)
+
     def test_01_click_new_level(self):
         print(self.driver.window_handles)
         background_txt_before_new_lvl = self.driver.find_element_by_accessibility_id(
@@ -158,24 +160,6 @@ class SimpleCalculatorTests(unittest.TestCase):
                 self.driver.find_element_by_name("Cancelar").click()
                 elem_exists = False
                 break
-
-    def test(self):
-        print(self.driver.window_handles)
-        background_txt_before_new_lvl = self.driver.find_element_by_accessibility_id(
-            "Background-01.png.<empty>.LevelEditor - 1.0.0").text
-        self.assertEqual(background_txt_before_new_lvl, "Background-01.png")
-        new_lvl_btn = self.driver.find_element_by_name("New level")
-        new_lvl_btn.click()
-        time.sleep(1)
-        background_txt_after_new_lvl = self.driver.find_element_by_accessibility_id(
-            ".<empty>.LevelEditor - 1.0.0").text
-        self.assertEqual(background_txt_after_new_lvl, "")
-        title_field = self.driver.find_element_by_accessibility_id(".<empty>.LevelEditor - 1.0.0")
-        title_field.send_keys(" Level6Salomon")
-        # USE VISUAL REGRESSION
-
-
-
 
 
 if __name__ == '__main__':
