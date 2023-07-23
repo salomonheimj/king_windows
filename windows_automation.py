@@ -39,6 +39,31 @@ class WindowsAppTests(unittest.TestCase):
     # def tearDownClass(self):
     #     self.driver.quit()
 
+    def open_lvl_1(self):
+        level_editor = LevelEditorPage(self.driver)
+        explorer = ExplorerPage(self.driver)
+        self.change_window_to_first_handle()
+        level_editor.open_level_button.click()
+        self.change_window_to_first_handle()
+        wait = WebDriverWait(self.driver, 30)
+        time.sleep(1)
+        self.driver.w3c = False
+        self.driver.switch_to.window(self.driver.current_window_handle)
+        self.driver.switch_to.window(self.driver.window_handles[0])
+        self.driver.implicitly_wait(30)
+        assets_elem = wait.until(EC.element_to_be_clickable((By.NAME, "assets")))
+        assets_elem.click()
+        explorer.open_button.click()
+        self.driver.implicitly_wait(30)
+        levels_elem = wait.until(EC.element_to_be_clickable((By.NAME, "Levels")))
+        levels_elem.click()
+        explorer.open_button.click()
+        self.driver.implicitly_wait(30)
+        level_3_elem = wait.until(EC.element_to_be_clickable((By.NAME, "Level1")))
+        level_3_elem.click()
+        explorer.open_button.click()
+        print("FINISH FILE SELECTION")
+
     def open_lvl_3(self):
         level_editor = LevelEditorPage(self.driver)
         explorer = ExplorerPage(self.driver)
@@ -151,8 +176,9 @@ class WindowsAppTests(unittest.TestCase):
         time.sleep(1)
         background_txt_after_new_lvl = level_editor_page.title_field.text
         self.assertEqual(background_txt_after_new_lvl, "")
-        level_editor_page.title_field.send_keys(" Level7Salomon")
+        time.sleep(2)
         self.put_all_blocks()
+        level_editor_page.title_field.send_keys(" Level7Salomon")
         level_editor_page.background_selection_field.click()
         self.change_window_to_first_handle()
         level_editor_page.background_01_field.click()
@@ -192,7 +218,6 @@ class WindowsAppTests(unittest.TestCase):
         self.reset_test_3()
 
     def test_03_open_all_tests(self):
-        level_editor_page = LevelEditorPage(self.driver)
         explorer_page = ExplorerPage(self.driver)
         time.sleep(3)
         i = 2
@@ -229,35 +254,29 @@ class WindowsAppTests(unittest.TestCase):
 
             self.assertIsNotNone(lvl_loaded)
 
-    def test(self):
-        assets_folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets")
-        image_path = os.path.join(assets_folder, "Brick-red.png")
-        self.change_window_to_first_handle()
-        self.driver.find_element_by_accessibility_id("TitleBar").click()
+    def test_04_place_specific_tiles_in_specific_places(self):
         level_editor_page = LevelEditorPage(self.driver)
-        #level_editor_page.new_level_button.click()
+        # self.change_window_to_first_handle()
+        # self.driver.find_element_by_accessibility_id("TitleBar").click()
+        self.change_window_to_first_handle()
+        self.open_lvl_1()
+        self.change_window_to_first_handle()
         app_window = self.driver.get_window_size()
         print(self.driver.get_window_size())
         window_width, window_height = app_window['width'], app_window["height"]
-        print(window_width)
-        print(window_height)
-        initial_x = 0.7
-        initial_y = 1
-        row_x = 0.5
-        row_y = 0.5
-        i = 0
-        while i < 14:
-            x = window_width * initial_x
-            y = window_height * initial_y
-            # Perform the click
-            pyautogui.click(x, y)
-            initial_x += 0.05
-            x_row = window_width * row_x
-            y_row = window_height * row_y
-            pyautogui.click(x_row, y_row)
-            row_x += 0.05
-            i += 1
-
+        # select red block
+        pyautogui.click(window_width * 0.7, window_height * 1)
+        # replace gray with red one
+        pyautogui.click(window_width * 0.45, window_height * 0.45)
+        # select blue block
+        pyautogui.click(window_width * 0.82, window_height * 1)
+        # replace with yellow with blue
+        pyautogui.click(window_width * 0.45, window_height * 0.55)
+        # place any block on 4th column 1st row
+        pyautogui.click(window_width * 0.65, window_height * 0.28)
+        self.change_window_to_first_handle()
+        self.change_window_to_first_handle()
+        # level_editor_page.save_button.click()
 
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(WindowsAppTests)
