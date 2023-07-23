@@ -40,12 +40,16 @@ cd windows-app-test-automation
 
 Make sure the "LevelEditor" application (version 1.0.0) is installed on your system. You can launch the application manually before running the tests.
 
-4. Execute the test suite:
+4. Execute the WinAppDriver:
+
+Go to the local Windows Application Driver folder (usually located on program files) and run the WinAppDriver.exe
+
+5. Execute the test suite:
 
 To run the test suite, use the following command:
 
 ```bash
-python -m unittest discover -v
+python windows_automation.py
 ```
 
 This command will discover all test cases in the `WindowsAppTests` class and execute them. The test results will be displayed in the console, indicating whether each test passed or failed.
@@ -59,6 +63,10 @@ The test suite contains the following test cases:
 2. **test_02_open_level**: This test case verifies the ability to open and modify an existing level. It opens "Level3" from the "Levels" folder, modifies the title and background, and saves the changes.
 
 3. **test_03_open_all_tests**: This test case iteratively opens different levels from the "Levels" folder and verifies their existence.
+
+## Design Pattern
+
+This automation suite is build using the POM (Page Object Model) pattern. Pages include the level editor and file explorer views.
 
 ## Conflicts
 
