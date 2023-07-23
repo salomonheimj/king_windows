@@ -1,6 +1,9 @@
+import os
 import time
 import unittest
 from appium import webdriver
+from appium.webdriver.common.touch_action import TouchAction
+import numpy as np
 import ctypes
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -11,6 +14,9 @@ from explorer_page import ExplorerPage
 
 from selenium.common.exceptions import StaleElementReferenceException, NoSuchElementException
 from selenium.webdriver.common.keys import Keys
+
+import cv2
+import pyautogui
 
 
 def bring_window_to_top(window_handle):
@@ -29,9 +35,9 @@ class WindowsAppTests(unittest.TestCase):
             command_executor='http://127.0.0.1:4723',
             desired_capabilities=desired_caps)
 
-    @classmethod
-    def tearDownClass(self):
-        self.driver.quit()
+    # @classmethod
+    # def tearDownClass(self):
+    #     self.driver.quit()
 
     def open_lvl_3(self):
         level_editor = LevelEditorPage(self.driver)
@@ -113,6 +119,29 @@ class WindowsAppTests(unittest.TestCase):
         explorer_page.open_button.click()
         time.sleep(2)
 
+    def put_all_blocks(self):
+        app_window = self.driver.get_window_size()
+        print(self.driver.get_window_size())
+        window_width, window_height = app_window['width'], app_window["height"]
+        print(window_width)
+        print(window_height)
+        initial_x = 0.7
+        initial_y = 1
+        row_x = 0.5
+        row_y = 0.5
+        i = 0
+        while i < 14:
+            x = window_width * initial_x
+            y = window_height * initial_y
+            # Perform the click
+            pyautogui.click(x, y)
+            initial_x += 0.05
+            x_row = window_width * row_x
+            y_row = window_height * row_y
+            pyautogui.click(x_row, y_row)
+            row_x += 0.055
+            i += 1
+
     def test_01_click_new_level(self):
         level_editor_page = LevelEditorPage(self.driver)
         explorer = ExplorerPage(self.driver)
@@ -123,6 +152,7 @@ class WindowsAppTests(unittest.TestCase):
         background_txt_after_new_lvl = level_editor_page.title_field.text
         self.assertEqual(background_txt_after_new_lvl, "")
         level_editor_page.title_field.send_keys(" Level7Salomon")
+        self.put_all_blocks()
         level_editor_page.background_selection_field.click()
         self.change_window_to_first_handle()
         level_editor_page.background_01_field.click()
@@ -198,6 +228,35 @@ class WindowsAppTests(unittest.TestCase):
                 elem_exists = False
 
             self.assertIsNotNone(lvl_loaded)
+
+    def test(self):
+        assets_folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets")
+        image_path = os.path.join(assets_folder, "Brick-red.png")
+        self.change_window_to_first_handle()
+        self.driver.find_element_by_accessibility_id("TitleBar").click()
+        level_editor_page = LevelEditorPage(self.driver)
+        #level_editor_page.new_level_button.click()
+        app_window = self.driver.get_window_size()
+        print(self.driver.get_window_size())
+        window_width, window_height = app_window['width'], app_window["height"]
+        print(window_width)
+        print(window_height)
+        initial_x = 0.7
+        initial_y = 1
+        row_x = 0.5
+        row_y = 0.5
+        i = 0
+        while i < 14:
+            x = window_width * initial_x
+            y = window_height * initial_y
+            # Perform the click
+            pyautogui.click(x, y)
+            initial_x += 0.05
+            x_row = window_width * row_x
+            y_row = window_height * row_y
+            pyautogui.click(x_row, y_row)
+            row_x += 0.05
+            i += 1
 
 
 if __name__ == '__main__':
